@@ -20,7 +20,7 @@
 Before starting, ensure you have the following installed:
 Avant de commencer, assurez-vous d'avoir installé :
 
-* **Python 3.10+**
+* **Python 3.12
 * **FFmpeg** (Must be in your system PATH / Doit être dans le PATH système)
 * **Libraries:** `pydub`, `lxml`, `Flask`, `requests`
 
