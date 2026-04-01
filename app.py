@@ -2,7 +2,7 @@ from flask import Flask, request, Response, send_file
 from flask_cors import CORS
 import os
 import uuid
-import time
+from processor import process_video
 
 app = Flask(__name__, static_folder="static")
 CORS(app)
@@ -24,28 +24,35 @@ def process():
 
     input_path = os.path.join(UPLOAD_FOLDER, f"{job_id}.mp4")
     output_xml = os.path.join(OUTPUT_FOLDER, f"{job_id}.xml")
-
     file.save(input_path)
 
     def generate():
-        steps = [
-            (10, "Analyse de l'audio..."),
-            (30, "Détection des silences..."),
-            (60, "Construction de la timeline..."),
-            (85, "Optimisation..."),
-        ]
+        try:
+            def callback(progress, status):
+                yield_data = f'{{"progress":{progress},"status":"{status}"}}\n'
+                print("sending:", yield_data.strip())
+                yield yield_data
 
-        for p, msg in steps:
-            yield f'{{"progress":{p},"status":"{msg}"}}\n'
-            time.sleep(1)
+            # Cette fonction va générer des messages pour Flask
+            for msg in process_video_generator(input_path, output_xml):
+                yield msg
 
-        # 👉 ICI plus tard : process_video(input_path, output_xml)
+            # À la fin, on renvoie le lien de téléchargement
+            yield f'{{"progress":100,"status":"Export prêt","done":true,"download_url":"/download/{job_id}"}}\n'
+        except Exception as e:
+            yield f'{{"error":true,"message":"{str(e)}"}}\n'
 
-        # fichier fake pour test
-        with open(output_xml, "w") as f:
-            f.write("<xml>Fake Premiere XML</xml>")
+    # Wrapping generator correctement
+    def process_video_generator(input_path, output_xml):
+        buffer = []
 
-        yield f'{{"progress":100,"status":"Export prêt","done":true,"download_url":"/download/{job_id}"}}\n'
+        def progress_callback(progress, status):
+            buffer.append(f'{{"progress":{progress},"status":"{status}"}}\n')
+
+        process_video(input_path, output_xml, progress_callback)
+
+        for msg in buffer:
+            yield msg
 
     return Response(generate(), mimetype="text/plain")
 
@@ -55,4 +62,4 @@ def download(job_id):
     return send_file(path, as_attachment=True)
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, threaded=True)
