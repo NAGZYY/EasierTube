@@ -74,17 +74,21 @@ def process():
 
 @app.route("/download/<job_id>")
 def download(job_id):
-    """Permet de récupérer le fichier XML généré."""
     path = os.path.join(OUTPUT_FOLDER, f"{job_id}.xml")
     
+    # On récupère le nom passé dans l'URL, sinon "Project" par défaut
+    # Exemple d'URL : /download/123?filename=mon_super_film.mp4
+    original_filename = request.args.get('filename', 'Project')
+    
+    friendly_name = f"EasierTube - {original_filename}.xml"
+
     if os.path.exists(path):
         return send_file(
             path, 
             as_attachment=True, 
-            download_name="EasierTube_Premiere_Project.xml"
+            download_name=friendly_name
         )
-    else:
-        return {"error": "Fichier introuvable"}, 404
+    return {"error": "Fichier introuvable"}, 404
 
 if __name__ == "__main__":
     # threaded=True est crucial pour que le streaming JSON fonctionne bien
