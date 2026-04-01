@@ -50,9 +50,7 @@ pip install pydub lxml flask requests
 
 ## ⚙️ Configuration
 
-1.  **Uploads:** Create a folder named `uploads/` in the root directory. Place your raw videos there.
-    * *Créez un dossier `uploads/` à la racine et déposez-y vos vidéos.*
-2.  **Paths:** Ensure your scripts use absolute paths to avoid "Media Offline" issues in your DAW.
+1.  **Paths:** Ensure your scripts use absolute paths to avoid "Media Offline" issues in your DAW.
     * *Vérifiez que vos scripts utilisent des chemins absolus pour éviter les fichiers hors-ligne.*
 
 ---
@@ -62,13 +60,11 @@ pip install pydub lxml flask requests
 ### Step 1: Start the Interface | Démarrer l'interface
 Run the local server of your choice:
 ```bash
-# Option A: Flask (Recommended)
+# Flask (Recommended)
 python app.py
 
-# Option B: Python HTTP Server
-python -m http.server 8000
 ```
-> 🌐 **Access:** `http://localhost:5000` (Flask) or `http://localhost:8000/index.html`
+> 🌐 **Access:** `http://localhost:5000` (Flask)
 
 ### Step 2: Process & Export | Traitement & Export
 1.  Run the Python scripts to detect silences and generate the XML.
