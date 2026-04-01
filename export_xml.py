@@ -1,7 +1,7 @@
 from lxml import etree
 import os
 
-def export_fcp_xml(video_path, segments, output_path):
+def export_fcpxml(video_path, segments, output_path):
     fps = 30
     video_name = os.path.basename(video_path)
     

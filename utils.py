@@ -1,22 +1,21 @@
 import subprocess
-import os
+import time
 
 def extract_audio(video_path, output_wav):
+    print("🎧 Extraction audio (ffmpeg)...")
+    start = time.time()
+
     command = [
         "ffmpeg",
         "-y",
         "-i", video_path,
-        "-ac", "2",
-        "-ar", "48000",
+        "-ac", "1",          # 🔥 mono = 2x plus rapide
+        "-ar", "16000",      # 🔥 16kHz largement suffisant pour voix
+        "-vn",
         output_wav
     ]
-    subprocess.run(command, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
-def mp3_to_wav(mp3_path, wav_path):
-    command = [
-        "ffmpeg",
-        "-y",
-        "-i", mp3_path,
-        wav_path
-    ]
-    subprocess.run(command, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+    elapsed = round(time.time() - start, 2)
+    print(f"✔ Audio extrait en {elapsed}s")

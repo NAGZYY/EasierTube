@@ -1,6 +1,6 @@
 from utils import extract_audio
 from silence import detect_voice_segments
-from export_xml import export_fcp_xml
+from export_xml import export_fcpxml
 import os
 
 def process_video(video_path, output_xml, job_id, sensitivity, margin_ms):
@@ -15,7 +15,7 @@ def process_video(video_path, output_xml, job_id, sensitivity, margin_ms):
     segments = detect_voice_segments(audio_path, sensitivity=sensitivity, padding_ms=margin_ms)
 
     yield 80, "Génération du XML Premiere..."
-    export_fcp_xml(os.path.abspath(video_path), segments, output_xml)
+    export_fcpxml(os.path.abspath(video_path), segments, output_xml)
 
     # Nettoyage de l'audio temporaire pour économiser l'espace
     if os.path.exists(audio_path):

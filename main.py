@@ -1,7 +1,7 @@
 import os
 from utils import extract_audio
 from silence import detect_voice_segments
-from export_xml import export_fcp_xml
+from export_xml import export_fcpxml
 
 INPUT_VIDEO = "input/video.mp4"
 OUTPUT_AUDIO = "output/audio.wav"
@@ -18,7 +18,7 @@ segments = detect_voice_segments(OUTPUT_AUDIO)
 print(f"✂️ {len(segments)} segments détectés")
 
 print("📄 Génération du projet Premiere (XML)...")
-export_fcp_xml(
+export_fcpxml(
     os.path.abspath(INPUT_VIDEO),
     segments,
     OUTPUT_XML

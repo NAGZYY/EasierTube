@@ -1,22 +1,29 @@
 from pydub import AudioSegment
 from pydub.silence import detect_nonsilent
+import time
 
 def detect_voice_segments(wav_path, sensitivity="normal", padding_ms=120):
+    print("🔍 Analyse audio (silences)...")
+    start_time = time.time()
+
     audio = AudioSegment.from_wav(wav_path)
-    
-    # Mapping de la sensibilité
+
+    duration_sec = len(audio) / 1000
+    print(f"▶ Durée audio : {round(duration_sec, 2)} sec")
+
     configs = {
-        "doux": {"min_len": 600, "thresh_offset": 10},
-        "normal": {"min_len": 400, "thresh_offset": 16},
-        "agressif": {"min_len": 200, "thresh_offset": 22}
+        "doux": {"min_len": 700, "thresh_offset": 12},
+        "normal": {"min_len": 500, "thresh_offset": 18},
+        "agressif": {"min_len": 300, "thresh_offset": 24}
     }
-    
+
     cfg = configs.get(sensitivity, configs["normal"])
 
     nonsilent_ranges = detect_nonsilent(
         audio,
         min_silence_len=cfg["min_len"],
-        silence_thresh=audio.dBFS - cfg["thresh_offset"]
+        silence_thresh=audio.dBFS - cfg["thresh_offset"],
+        seek_step=10  # 🔥 clé : skip frames → énorme gain
     )
 
     segments = []
@@ -25,5 +32,9 @@ def detect_voice_segments(wav_path, sensitivity="normal", padding_ms=120):
             max(0, start - padding_ms),
             min(len(audio), end + padding_ms)
         ))
+
+    elapsed = round(time.time() - start_time, 2)
+    print(f"✔ Segments détectés : {len(segments)}")
+    print(f"✔ Temps analyse audio : {elapsed}s")
 
     return segments
