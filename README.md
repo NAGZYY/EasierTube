@@ -64,6 +64,7 @@ Run the local server of your choice:
 python app.py
 
 ```
+
 ## 📁 File Management
 The project will automatically creates uploads and output folders in the root directory.
 
@@ -73,6 +74,7 @@ Maintenance: If you downloaded the output via browser, make sure to regularly de
 
 [!TIP]
 Keep your workspace clean! Periodic "digital spring cleaning" of your output folder ensures you don't mix up different project exports.
+
 
 > 🌐 **Access to dashboard:** `http://localhost:5000` (Flask)
 
