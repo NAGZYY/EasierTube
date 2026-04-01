@@ -59,8 +59,9 @@ pip install pydub lxml flask requests
 
 ### Step 1: Start the Interface | Démarrer l'interface
 Run the local server of your choice:
+
+Flask is highly Recommended
 ```bash
-# Flask (Recommended)
 python app.py
 
 ```
@@ -76,7 +77,7 @@ Maintenance: If you downloaded the output via browser, make sure to regularly de
 Keep your workspace clean! Periodic "digital spring cleaning" of your output folder ensures you don't mix up different project exports.
 
 
-> 🌐 **Access to dashboard:** `http://localhost:5000` (Flask)
+> 🌐 **Access to your server:** `http://localhost:5000` (Flask)
 
 ### Step 2: Process & Export | Traitement & Export
 1.  Run the Python scripts to detect silences and generate the XML.
