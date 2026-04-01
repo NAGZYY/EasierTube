@@ -1,6 +1,6 @@
 # 🎬 EasierTube
 
-**EasierTube** is a Python-powered automation tool designed to streamline video editing workflows by automatically detecting silences and generating ready-to-use timelines.
+**EasierTube** is a Python-powered automation tool designed to streamline video editing workflows by automatically detecting silences and generating ready-to-use timelines. **FOR FREE, NO SUBSCRIPTION NEEDED**
 
 **EasierTube** est un outil d'automatisation en Python conçu pour simplifier le flux de travail de montage vidéo en détectant automatiquement les silences et en générant des timelines prêtes à l'emploi.
 
