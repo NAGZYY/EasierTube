@@ -6,6 +6,37 @@ const pct = document.getElementById('progress-pct');
 const btn = document.getElementById('start');
 
 let currentFile = null;
+let currentLang = 'fr';
+
+// ─── TRANSLATIONS ───
+const translations = {
+  fr: {
+    noFile: '⚠️ Ajoute une vidéo d\'abord',
+    fileReady: 'Fichier chargé. Lance le traitement !',
+    readyToProcess: 'Prêt à traiter',
+    processing: '⏳ Traitement en cours...',
+    serverError: 'Erreur serveur',
+    error: '❌ Une erreur est survenue.',
+    launch: '▶ Lancer le traitement',
+    done: '✅ Export prêt !',
+    download: '⬇ Télécharger le projet Premiere'
+  },
+  en: {
+    noFile: '⚠️ Add a video first',
+    fileReady: 'File loaded. Start processing!',
+    readyToProcess: 'Ready to process',
+    processing: '⏳ Processing...',
+    serverError: 'Server error',
+    error: '❌ An error occurred.',
+    launch: '▶ Start processing',
+    done: '✅ Export ready!',
+    download: '⬇ Download Premiere project'
+  }
+};
+
+function t(key) {
+  return translations[currentLang]?.[key] || translations.fr[key];
+}
 
 // ─── FILE HANDLING ───
 dz.addEventListener('dragover', e => {
@@ -30,8 +61,8 @@ function handleFile(file) {
   dz.querySelector('.dropzone-icon').textContent = '✅';
   dz.querySelector('.dropzone-title').textContent = file.name;
   dz.querySelector('.dropzone-sub').textContent =
-    (file.size / 1024 / 1024).toFixed(1) + ' MB · Prêt à traiter';
-  status.textContent = 'Fichier chargé. Lance le traitement !';
+    (file.size / 1024 / 1024).toFixed(1) + ' MB · ' + t('readyToProcess');
+  status.textContent = t('fileReady');
 }
 
 // ─── TOGGLES ───
@@ -55,12 +86,12 @@ function getMargin() {
 // ─── START PROCESS ───
 async function handleStart() {
   if (!currentFile) {
-    status.textContent = '⚠️ Ajoute une vidéo d\'abord';
+    status.textContent = t('noFile');
     return;
   }
 
   btn.disabled = true;
-  btn.textContent = '⏳ Traitement en cours...';
+  btn.textContent = t('processing');
 
   const data = new FormData();
   data.append('file', currentFile);
@@ -76,7 +107,7 @@ async function handleStart() {
     });
 
     if (!res.ok || !res.body) {
-      throw new Error('Erreur serveur');
+      throw new Error(t('serverError'));
     }
 
     const reader = res.body.getReader();
@@ -105,8 +136,8 @@ async function handleStart() {
         if (msg.done) {
           bar.style.width = '100%';
           pct.textContent = '100%';
-          status.textContent = '✅ Export prêt !';
-          btn.textContent = '⬇ Télécharger le projet Premiere';
+          status.textContent = t('done');
+          btn.textContent = t('download');
           btn.disabled = false;
           btn.onclick = () => window.location.href = msg.download_url;
         }
@@ -115,8 +146,8 @@ async function handleStart() {
 
   } catch (err) {
     console.error(err);
-    status.textContent = '❌ Une erreur est survenue.';
+    status.textContent = t('error');
     btn.disabled = false;
-    btn.textContent = '▶ Lancer le traitement';
+    btn.textContent = t('launch');
   }
 }

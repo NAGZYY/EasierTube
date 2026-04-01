@@ -90,6 +90,13 @@ def download(job_id):
         )
     return {"error": "Fichier introuvable"}, 404
 
+@app.route('/demo.mp4')
+def demo_video():
+    demo_path = os.path.join(app.root_path, 'demo.mp4')
+    if os.path.exists(demo_path):
+        return send_file(demo_path, mimetype='video/mp4')
+    return {"error": "Demo video introuvable"}, 404
+
 if __name__ == "__main__":
     # threaded=True est crucial pour que le streaming JSON fonctionne bien
     app.run(debug=True, port=5000, threaded=True)

@@ -13,13 +13,26 @@
 <nav>
   <div class="logo">
     <div class="play-icon"></div>
-    EasierTube
+    <span class="lang-fr">EasierTube</span>
+    <span class="lang-en" style="display:none;">EasierTube</span>
   </div>
   <div class="nav-links">
-    <a href="#">Outils</a>
-    <a href="#">Comment ça marche</a>
-    <a href="#">FAQ</a>
-    <a href="#" class="nav-cta">Essayer gratuitement</a>
+    <!-- LANGUAGE DROPDOWN -->
+    <div class="lang-dropdown">
+      <button class="lang-dropdown-toggle" id="langToggle">
+        <span class="lang-fr">🇫🇷 FR</span>
+        <span class="lang-en" style="display:none;">🇺🇸 EN</span>
+        <span class="dropdown-arrow">▼</span>
+      </button>
+      <div class="lang-dropdown-menu" id="langMenu">
+        <button class="lang-dropdown-item active" data-lang="fr"><span class="lang-fr">🇫🇷 Français</span><span class="lang-en" style="display:none;">🇫🇷 French</span></button>
+        <button class="lang-dropdown-item" data-lang="en"><span class="lang-fr">🇺🇸 English</span><span class="lang-en" style="display:none;">🇺🇸 English</span></button>
+      </div>
+    </div>
+    <a href="#upload-section"><span class="lang-fr">Outils</span><span class="lang-en" style="display:none;">Tools</span></a>
+    <a href="#features-strip"><span class="lang-fr">Comment ça marche</span><span class="lang-en" style="display:none;">How it works</span></a>
+    <a href="mailto:jeremyracine2017@gmail.com"><span class="lang-fr">Contact</span><span class="lang-en" style="display:none;">Contact</span></a>
+    <a href="#upload-section" class="nav-cta"><span class="lang-fr">Essayer gratuitement</span><span class="lang-en" style="display:none;">Try for free</span></a>
   </div>
 </nav>
 
@@ -27,41 +40,44 @@
 <section class="hero">
   <div class="hero-badge">
     <span class="dot"></span>
-    Pour créateurs YouTube
+    <span class="lang-fr">Pour créateurs YouTube</span>
+    <span class="lang-en" style="display:none;">For YouTube creators</span>
   </div>
   <h1>
-    Monter plus <span class="accent">vite</span><br>
-    sur Premiere<span class="red-accent">.</span><br>
-    Automatiquement<span class="red-accent">.</span>
+    <span class="lang-fr">Monter plus <span class="accent">vite</span><br>sur Premiere<span class="red-accent">.</span><br>Automatiquement<span class="red-accent">.</span></span>
+    <span class="lang-en" style="display:none;">Edit faster <span class="accent">on</span><br>Premiere<span class="red-accent">.</span><br>Automatically<span class="red-accent">.</span></span>
   </h1>
   <p class="hero-sub">
-    Coupe les silences, optimise l'audio et exporte directement
-    un <strong>projet prêt à monter</strong> dans Premiere Pro.
+    <span class="lang-fr">Coupe les silences, optimise l'audio et exporte directement un <strong>projet prêt à monter</strong> dans Premiere Pro.</span>
+    <span class="lang-en" style="display:none;">Cut silences, optimize audio, and export a <strong>ready-to-edit project</strong> directly to Premiere Pro.</span>
   </p>
   <div class="hero-ctas">
     <button class="btn-primary" onclick="document.querySelector('.upload-section').scrollIntoView({behavior:'smooth'})">
-      ▶ Essayer gratuitement
+      <span class="lang-fr">▶ Essayer gratuitement</span>
+      <span class="lang-en" style="display:none;">▶ Try for free</span>
     </button>
-    <button class="btn-secondary">
-      📽 Voir une démo
+    <button class="btn-secondary" onclick="openDemo()">
+      <span class="lang-fr">📽 Voir une démo</span>
+      <span class="lang-en" style="display:none;">📽 Watch a demo</span>
     </button>
   </div>
 </section>
 
 <!-- ─── UPLOAD CARD ─── -->
-<section class="upload-section">
+<section class="upload-section" id="upload-section">
   <div class="upload-card">
     <div class="card-header">
       <div class="card-header-left">
-        ✂️ Auto Cut Vidéo
+        <span class="lang-fr">✂️ Auto Cut Vidéo</span>
+        <span class="lang-en" style="display:none;">✂️ Auto Cut Video</span>
       </div>
-      <span class="tag">Gratuit</span>
+      <span class="tag"><span class="lang-fr">Gratuit</span><span class="lang-en" style="display:none;">Free</span></span>
     </div>
 
     <div class="dropzone" id="dropzone" onclick="document.getElementById('fileInput').click()">
       <div class="dropzone-icon">🎬</div>
-      <div class="dropzone-title">Dépose ta vidéo ici</div>
-      <div class="dropzone-sub">ou clique pour choisir un fichier</div>
+      <div class="dropzone-title"><span class="lang-fr">Dépose ta vidéo ici</span><span class="lang-en" style="display:none;">Drop your video here</span></div>
+      <div class="dropzone-sub"><span class="lang-fr">ou clique pour choisir un fichier</span><span class="lang-en" style="display:none;">or click to select a file</span></div>
       <div class="dropzone-formats">
         <span class="format-tag">MP4</span>
         <span class="format-tag">MOV</span>
@@ -73,15 +89,15 @@
 
     <div class="settings-grid">
       <div class="setting-item">
-        <div class="setting-label">Sensibilité silences</div>
+        <div class="setting-label"><span class="lang-fr">Sensibilité silences</span><span class="lang-en" style="display:none;">Silence sensitivity</span></div>
         <div class="toggle-group">
-          <button class="toggle-btn" onclick="selectToggle(this, 'sens')">Doux</button>
-          <button class="toggle-btn active" onclick="selectToggle(this, 'sens')">Normal</button>
-          <button class="toggle-btn" onclick="selectToggle(this, 'sens')">Agressif</button>
+          <button class="toggle-btn" onclick="selectToggle(this, 'sens')"><span class="lang-fr">Doux</span><span class="lang-en" style="display:none;">Soft</span></button>
+          <button class="toggle-btn active" onclick="selectToggle(this, 'sens')"><span class="lang-fr">Normal</span><span class="lang-en" style="display:none;">Normal</span></button>
+          <button class="toggle-btn" onclick="selectToggle(this, 'sens')"><span class="lang-fr">Agressif</span><span class="lang-en" style="display:none;">Aggressive</span></button>
         </div>
       </div>
       <div class="setting-item">
-        <div class="setting-label">Marge voix</div>
+        <div class="setting-label"><span class="lang-fr">Marge voix</span><span class="lang-en" style="display:none;">Voice margin</span></div>
         <div class="range-display" id="marginDisplay">120 ms</div>
         <input type="range" id="marginRange" min="50" max="400" value="120"
           oninput="document.getElementById('marginDisplay').textContent = this.value + ' ms'">
@@ -93,42 +109,43 @@
         <div id="bar"></div>
       </div>
       <div class="progress-meta">
-        <span id="status">En attente d'un fichier...</span>
+        <span id="status"><span class="lang-fr">En attente d'un fichier...</span><span class="lang-en" style="display:none;">Waiting for a file...</span></span>
         <span id="progress-pct"></span>
       </div>
     </div>
 
     <div class="card-footer">
       <button id="start" onclick="handleStart()">
-        ⚡ Lancer le traitement
+        <span class="lang-fr">⚡ Lancer le traitement</span>
+        <span class="lang-en" style="display:none;">⚡ Start processing</span>
       </button>
     </div>
   </div>
 </section>
 
 <!-- ─── STEPS ─── -->
-<section class="features-strip">
+<section class="features-strip" id="features-strip">
   <div class="features-inner">
-    <div class="section-label">Comment ça marche</div>
-    <div class="section-title">3 étapes. C'est tout.</div>
+    <div class="section-label"><span class="lang-fr">Comment ça marche</span><span class="lang-en" style="display:none;">How it works</span></div>
+    <div class="section-title"><span class="lang-fr">3 étapes. C'est tout.</span><span class="lang-en" style="display:none;">3 steps. That's all.</span></div>
     <div class="steps-grid">
       <div class="step-card">
         <span class="step-num">01</span>
         <span class="step-icon">📤</span>
-        <div class="step-title">Upload ta vidéo</div>
-        <p class="step-desc">Glisse-dépose ton fichier brut — MP4, MOV, peu importe. Même 2h de footage.</p>
+        <div class="step-title"><span class="lang-fr">Upload ta vidéo</span><span class="lang-en" style="display:none;">Upload your video</span></div>
+        <p class="step-desc"><span class="lang-fr">Glisse-dépose ton fichier brut — MP4, MOV, peu importe. Même 2h de footage.</span><span class="lang-en" style="display:none;">Drag and drop your raw file — MP4, MOV, whatever. Even 2h of footage.</span></p>
       </div>
       <div class="step-card">
         <span class="step-num">02</span>
         <span class="step-icon">🔊</span>
-        <div class="step-title">Analyse automatique</div>
-        <p class="step-desc">L'outil détecte chaque silence et construit une timeline optimisée pour toi.</p>
+        <div class="step-title"><span class="lang-fr">Analyse automatique</span><span class="lang-en" style="display:none;">Automatic analysis</span></div>
+        <p class="step-desc"><span class="lang-fr">L'outil détecte chaque silence et construit une timeline optimisée pour toi.</span><span class="lang-en" style="display:none;">The tool detects each silence and builds an optimized timeline for you.</span></p>
       </div>
       <div class="step-card">
         <span class="step-num">03</span>
         <span class="step-icon">🎬</span>
-        <div class="step-title">Export Premiere Pro</div>
-        <p class="step-desc">Reçois un fichier XML ou .prproj directement importable dans ta timeline.</p>
+        <div class="step-title"><span class="lang-fr">Export Premiere Pro</span><span class="lang-en" style="display:none;">Export to Premiere Pro</span></div>
+        <p class="step-desc"><span class="lang-fr">Reçois un fichier XML ou .prproj directement importable dans ta timeline.</span><span class="lang-en" style="display:none;">Receive an XML or .prproj file ready to import into your timeline.</span></p>
       </div>
     </div>
   </div>
@@ -137,8 +154,8 @@
 <!-- ─── COMPAT BANNER ─── -->
 <div class="compat-banner">
   <div class="compat-text">
-    <h3>Compatible avec tes outils</h3>
-    <p>Intégration directe, aucun plugin requis.</p>
+    <h3><span class="lang-fr">Compatible avec tes outils</span><span class="lang-en" style="display:none;">Compatible with your tools</span></h3>
+    <p><span class="lang-fr">Intégration directe, aucun plugin requis.</span><span class="lang-en" style="display:none;">Direct integration, no plugin required.</span></p>
   </div>
   <div class="compat-logos">
     <div class="compat-logo"><span class="check">✓</span> Adobe Premiere Pro</div>
@@ -153,14 +170,96 @@
     <div class="play-icon" style="width:20px;height:20px;"></div>
     EasierTube
   </div>
-  <span>Fait pour les créateurs YouTube · 2025</span>
+  <span><span class="lang-fr">Fait pour les créateurs YouTube · 2026</span><span class="lang-en" style="display:none;">Made for YouTube creators · 2026</span></span>
   <div style="display:flex;gap:20px;">
-    <a href="#" style="color:var(--muted);text-decoration:none;">Confidentialité</a>
-    <a href="#" style="color:var(--muted);text-decoration:none;">Contact</a>
+    <a href="#" style="color:var(--muted);text-decoration:none;"><span class="lang-fr">Confidentialité</span><span class="lang-en" style="display:none;">Privacy</span></a>
+    <a href="mailto:jeremyracine2017@gmail.com" style="color:var(--muted);text-decoration:none;"><span class="lang-fr">Contact</span><span class="lang-en" style="display:none;">Contact</span></a>
   </div>
 </footer>
 
-<script src="/static/app.js"></script>
+<div id="demoModal" class="demo-modal" style="display:none;">
+  <div class="demo-modal-overlay" onclick="closeDemo()"></div>
+  <div class="demo-modal-content">
+    <button class="demo-close" onclick="closeDemo()">✕</button>
+    <video id="demoVideoPlayer" controls>
+      <source src="/demo.mp4" type="video/mp4">
+    </video>
+  </div>
+</div>
 
+<script src="/static/app.js"></script>
+<script>
+  // Demo modal functions
+  function openDemo() {
+    const modal = document.getElementById('demoModal');
+    const video = document.getElementById('demoVideoPlayer');
+    modal.style.display = 'flex';
+    video.currentTime = 0;
+    video.load();
+    video.play().catch(() => {
+      // Autoplay can fail in some browsers, but modal will still open.
+    });
+  }
+
+  function closeDemo() {
+    const modal = document.getElementById('demoModal');
+    const video = document.getElementById('demoVideoPlayer');
+    modal.style.display = 'none';
+    video.pause();
+  }
+
+  // Close demo when pressing ESC
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeDemo();
+  });
+
+  // Detect browser language
+  const userLang = navigator.language || navigator.userLanguage;
+  if(userLang.startsWith('en')) showEnglish();
+
+  // Language dropdown toggle
+  const langToggle = document.getElementById('langToggle');
+  const langMenu = document.getElementById('langMenu');
+
+  langToggle.addEventListener('click', () => {
+    langToggle.classList.toggle('open');
+    langMenu.classList.toggle('open');
+  });
+
+  // Close dropdown when clicking outside
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.lang-dropdown')) {
+      langToggle.classList.remove('open');
+      langMenu.classList.remove('open');
+    }
+  });
+
+  // Language dropdown items
+  document.querySelectorAll('.lang-dropdown-item').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const lang = btn.getAttribute('data-lang');
+      if(lang === 'en') showEnglish();
+      else showFrench();
+      langToggle.classList.remove('open');
+      langMenu.classList.remove('open');
+    });
+  });
+
+  function showEnglish() {
+    document.querySelectorAll('.lang-fr').forEach(el => el.style.display = 'none');
+    document.querySelectorAll('.lang-en').forEach(el => el.style.display = '');
+    document.querySelector('[data-lang="en"]').classList.add('active');
+    document.querySelector('[data-lang="fr"]').classList.remove('active');
+    currentLang = 'en';
+  }
+
+  function showFrench() {
+    document.querySelectorAll('.lang-en').forEach(el => el.style.display = 'none');
+    document.querySelectorAll('.lang-fr').forEach(el => el.style.display = '');
+    document.querySelector('[data-lang="fr"]').classList.add('active');
+    document.querySelector('[data-lang="en"]').classList.remove('active');
+    currentLang = 'fr';
+  }
+</script>
 </body>
 </html>
