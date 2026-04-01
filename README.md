@@ -37,7 +37,7 @@ cd EasierTube
 ### 2. Install FFmpeg
 | OS | Command / Link |
 | :--- | :--- |
-| **Windows** | [Download ffmpeg](https://ffmpeg.org/download.html) & add `/bin` to PATH OR use winget install ffmpeg |
+| **Windows** | [Download ffmpeg](https://ffmpeg.org/download.html) & add `/bin` to PATH OR use `winget install ffmpeg` |
 | **macOS** | `brew install ffmpeg` |
 | **Linux** | `sudo apt install ffmpeg` |
 
