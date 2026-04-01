@@ -123,6 +123,66 @@
   </div>
 </section>
 
+<!-- ─── AUDIO CONVERTER ─── -->
+<section class="upload-section" id="audio-section">
+  <div class="upload-card">
+    <div class="card-header">
+      <div class="card-header-left">
+        <span class="lang-fr">🎧 Convertisseur Audio</span>
+        <span class="lang-en" style="display:none;">🎧 Audio Converter</span>
+      </div>
+      <span class="tag">
+        <span class="lang-fr">Gratuit</span>
+        <span class="lang-en" style="display:none;">Free</span>
+      </span>
+    </div>
+
+    <div class="dropzone" onclick="document.getElementById('folderInput').click()">
+      <div class="dropzone-icon">📁</div>
+      <div class="dropzone-title">
+        <span class="lang-fr">Sélectionne un dossier</span>
+        <span class="lang-en" style="display:none;">Select a folder</span>
+      </div>
+      <div class="dropzone-sub">
+        <span class="lang-fr">Tous les .mp3 et .m4a seront convertis en .wav</span>
+        <span class="lang-en" style="display:none;">All .mp3 and .m4a files will be converted to .wav</span>
+      </div>
+      <div class="dropzone-formats">
+        <span class="format-tag">MP3</span>
+        <span class="format-tag">M4A</span>
+        <span class="format-tag">→ WAV</span>
+      </div>
+      <input
+        type="file"
+        id="folderInput"
+        webkitdirectory
+        directory
+        multiple
+      >
+    </div>
+
+    <div class="progress-section">
+      <div class="progress-bar-wrap">
+        <div id="audio-bar"></div>
+      </div>
+      <div class="progress-meta">
+        <span id="audio-status">
+          <span class="lang-fr">En attente d'un dossier...</span>
+          <span class="lang-en" style="display:none;">Waiting for a folder...</span>
+        </span>
+        <span id="audio-pct"></span>
+      </div>
+    </div>
+
+    <div class="card-footer">
+      <button id="audio-start" onclick="startAudioConvert()">
+        <span class="lang-fr">🔄 Convertir en WAV</span>
+        <span class="lang-en" style="display:none;">🔄 Convert to WAV</span>
+      </button>
+    </div>
+  </div>
+</section>
+
 <!-- ─── STEPS ─── -->
 <section class="features-strip" id="features-strip">
   <div class="features-inner">

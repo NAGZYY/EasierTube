@@ -816,7 +816,7 @@
         justify-content: center;
         transition: transform 0.2s, background 0.2s;
         font-family: monospace;
-        box-shadow: 0 16px 40px rgba(0,0,0,0.45);
+        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
         pointer-events: auto;
     }
 
@@ -830,6 +830,45 @@
     .demo-close:hover {
         background: rgba(0, 0, 0, 0.9);
         border-color: rgba(255, 255, 255, 0.4);
+    }
+
+    #audio-bar {
+        height: 100%;
+        width: 0%;
+        background: linear-gradient(90deg, var(--green), #00ffcc);
+        border-radius: 2px;
+        transition: width 0.3s ease;
+        box-shadow: 0 0 8px var(--green-glow);
+    }
+
+    #audio-start {
+        width: 100%;
+        padding: 14px;
+        background: var(--green);
+        color: #080808;
+        border: none;
+        border-radius: 10px;
+        font-size: 1rem;
+        font-weight: 700;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+        font-family: 'DM Sans', sans-serif;
+        letter-spacing: 0.01em;
+        box-shadow: 0 4px 20px var(--green-glow);
+    }
+
+    #audio-start:hover {
+        opacity: 0.9;
+        transform: translateY(-1px);
+        box-shadow: 0 8px 32px var(--green-glow);
+    }
+
+    #audio-start:active {
+        transform: translateY(0);
     }
 
     /* ─── FOOTER ─── */
