@@ -64,7 +64,17 @@ Run the local server of your choice:
 python app.py
 
 ```
-> 🌐 **Access:** `http://localhost:5000` (Flask)
+## 📁 File Management
+The project will automatically creates uploads and output folders in the root directory.
+
+Results: Find your processed files in the output folder or download them directly via your browser.
+
+Maintenance: If you downloaded the output via browser, make sure to regularly delete files in the output folder to prevent clutter and save disk space.
+
+[!TIP]
+Keep your workspace clean! Periodic "digital spring cleaning" of your output folder ensures you don't mix up different project exports.
+
+> 🌐 **Access to dashboard:** `http://localhost:5000` (Flask)
 
 ### Step 2: Process & Export | Traitement & Export
 1.  Run the Python scripts to detect silences and generate the XML.
