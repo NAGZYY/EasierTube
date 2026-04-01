@@ -1,0 +1,118 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE xmeml>
+<xmeml version="4">
+  <project>
+    <name>EasierTube Project</name>
+    <children>
+      <sequence id="sequence-1">
+        <name>EasierTube Timeline</name>
+        <duration>258</duration>
+        <rate>
+          <timebase>30</timebase>
+          <ntsc>FALSE</ntsc>
+        </rate>
+        <media>
+          <video>
+            <format>
+              <samplecharacteristics>
+                <rate>
+                  <timebase>30</timebase>
+                  <ntsc>FALSE</ntsc>
+                </rate>
+                <width>1920</width>
+                <height>1080</height>
+                <anamorphic>FALSE</anamorphic>
+                <pixelaspectratio>square</pixelaspectratio>
+              </samplecharacteristics>
+            </format>
+            <track>
+              <clipitem id="clip-0">
+                <name>video.mp4</name>
+                <start>0</start>
+                <end>108</end>
+                <in>0</in>
+                <out>108</out>
+                <duration>108</duration>
+                <file id="file-1"/>
+              </clipitem>
+              <clipitem id="clip-1">
+                <name>video.mp4</name>
+                <start>108</start>
+                <end>258</end>
+                <in>150</in>
+                <out>300</out>
+                <duration>150</duration>
+                <file id="file-1"/>
+              </clipitem>
+            </track>
+          </video>
+          <audio>
+            <track>
+              <clipitem id="clip-a-0">
+                <name>video.mp4</name>
+                <start>0</start>
+                <end>108</end>
+                <in>0</in>
+                <out>108</out>
+                <duration>108</duration>
+                <file id="file-1"/>
+                <sourcetrack>
+                  <mediatype>audio</mediatype>
+                  <trackindex>1</trackindex>
+                  <channelindex>1</channelindex>
+                </sourcetrack>
+              </clipitem>
+              <clipitem id="clip-a-1">
+                <name>video.mp4</name>
+                <start>108</start>
+                <end>258</end>
+                <in>0</in>
+                <out>150</out>
+                <duration>150</duration>
+                <file id="file-1"/>
+                <sourcetrack>
+                  <mediatype>audio</mediatype>
+                  <trackindex>1</trackindex>
+                  <channelindex>1</channelindex>
+                </sourcetrack>
+              </clipitem>
+            </track>
+          </audio>
+        </media>
+      </sequence>
+    </children>
+  </project>
+  <resources>
+    <file id="file-1">
+      <name>video.mp4</name>
+      <pathurl>file://localhost/C:/chemin/vers/video.mp4</pathurl>
+      <rate>
+        <timebase>30</timebase>
+        <ntsc>FALSE</ntsc>
+      </rate>
+      <duration>600</duration>
+      <media>
+        <video>
+          <samplecharacteristics>
+            <rate>
+              <timebase>30</timebase>
+              <ntsc>FALSE</ntsc>
+            </rate>
+            <width>1920</width>
+            <height>1080</height>
+            <anamorphic>FALSE</anamorphic>
+            <pixelaspectratio>square</pixelaspectratio>
+          </samplecharacteristics>
+        </video>
+        <audio>
+          <format>
+            <samplecharacteristics>
+              <depth>16</depth>
+              <samplerate>48000</samplerate>
+            </samplecharacteristics>
+          </format>
+        </audio>
+      </media>
+    </file>
+  </resources>
+</xmeml>
