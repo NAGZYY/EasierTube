@@ -3,20 +3,22 @@ from silence import detect_voice_segments
 from export_xml import export_fcp_xml
 import os
 
-def process_video(video_path, output_xml, progress_callback=None):
-    audio_path = "output/audio.wav"
+def process_video(video_path, output_xml, job_id, sensitivity, margin_ms):
+    # Utilisation du job_id pour éviter les conflits de fichiers audio
+    audio_path = os.path.join("output", f"{job_id}.wav")
 
-    # Étape 1 : extraction audio
+    yield 10, "Extraction de l'audio..."
     extract_audio(video_path, audio_path)
-    if progress_callback:
-        progress_callback(10, "Analyse de l'audio...")
 
-    # Étape 2 : détection des silences
-    segments = detect_voice_segments(audio_path)
-    if progress_callback:
-        progress_callback(50, "Détection des silences...")
+    yield 30, f"Analyse des silences ({sensitivity})..."
+    # On adapte les paramètres de silence.py selon le choix utilisateur
+    segments = detect_voice_segments(audio_path, sensitivity=sensitivity, padding_ms=margin_ms)
 
-    # Étape 3 : export XML
+    yield 80, "Génération du XML Premiere..."
     export_fcp_xml(os.path.abspath(video_path), segments, output_xml)
-    if progress_callback:
-        progress_callback(100, "Export prêt !")
+
+    # Nettoyage de l'audio temporaire pour économiser l'espace
+    if os.path.exists(audio_path):
+        os.remove(audio_path)
+    
+    yield 95, "Finalisation..."

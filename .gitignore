@@ -1,0 +1,15 @@
+# Ignorer les fichiers générés par l'application
+output/
+uploads/
+
+# Fichiers Python compilés
+*.pyc
+__pycache__/
+
+# Environnement virtuel
+venv/
+.env
+
+# Fichiers système
+.DS_Store
+Thumbs.db

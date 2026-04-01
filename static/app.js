@@ -35,7 +35,7 @@ function handleFile(file) {
 }
 
 // ─── TOGGLES ───
-function selectToggle(btn) {
+function selectToggle(btn, type) {
   btn.closest('.toggle-group')
     .querySelectorAll('.toggle-btn')
     .forEach(b => b.classList.remove('active'));

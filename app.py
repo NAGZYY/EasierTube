@@ -1,12 +1,15 @@
-from flask import Flask, request, Response, send_file
+from flask import Flask, request, Response, send_file, stream_with_context
 from flask_cors import CORS
 import os
 import uuid
+import json
 from processor import process_video
 
 app = Flask(__name__, static_folder="static")
+# CORS est essentiel si ton frontend et backend ne sont pas sur le même port
 CORS(app)
 
+# Configuration des dossiers
 UPLOAD_FOLDER = "uploads"
 OUTPUT_FOLDER = "output"
 
@@ -15,51 +18,74 @@ os.makedirs(OUTPUT_FOLDER, exist_ok=True)
 
 @app.route("/")
 def index():
+    """Sert la page d'accueil de l'application."""
     return app.send_static_file("index.html")
 
 @app.route("/process", methods=["POST"])
 def process():
+    """Gère l'upload, le traitement et le retour de progression en temps réel."""
+    if 'file' not in request.files:
+        return {"error": "Aucun fichier envoyé"}, 400
+    
     file = request.files["file"]
-    job_id = str(uuid.uuid4())
+    if file.filename == '':
+        return {"error": "Nom de fichier vide"}, 400
 
+    # Création d'un ID unique pour cette session de montage
+    job_id = str(uuid.uuid4())
+    
+    # Récupération des réglages envoyés par le frontend
+    sensitivity = request.form.get('sensitivity', 'normal')
+    try:
+        margin_ms = int(request.form.get('margin_ms', 120))
+    except (ValueError, TypeError):
+        margin_ms = 120
+
+    # Définition des chemins de fichiers
+    # On garde l'extension .mp4 pour que Premiere reconnaisse le média source
     input_path = os.path.join(UPLOAD_FOLDER, f"{job_id}.mp4")
+    # L'output est maintenant un .xml standard (XMEML)
     output_xml = os.path.join(OUTPUT_FOLDER, f"{job_id}.xml")
+    
+    # Sauvegarde du fichier uploadé
     file.save(input_path)
 
+    @stream_with_context
     def generate():
         try:
-            def callback(progress, status):
-                yield_data = f'{{"progress":{progress},"status":"{status}"}}\n'
-                print("sending:", yield_data.strip())
-                yield yield_data
+            # Appel du processeur qui analyse l'audio et génère les segments
+            # On yield chaque étape pour mettre à jour la barre de progression en JS
+            for progress, status in process_video(input_path, output_xml, job_id, sensitivity, margin_ms):
+                yield json.dumps({"progress": progress, "status": status}) + "\n"
 
-            # Cette fonction va générer des messages pour Flask
-            for msg in process_video_generator(input_path, output_xml):
-                yield msg
-
-            # À la fin, on renvoie le lien de téléchargement
-            yield f'{{"progress":100,"status":"Export prêt","done":true,"download_url":"/download/{job_id}"}}\n'
+            # Message final indiquant que le lien de téléchargement est prêt
+            yield json.dumps({
+                "progress": 100, 
+                "status": "Montage terminé !", 
+                "done": True, 
+                "download_url": f"/download/{job_id}"
+            }) + "\n"
+            
         except Exception as e:
-            yield f'{{"error":true,"message":"{str(e)}"}}\n'
+            # En cas d'erreur (ffmpeg manquant, etc.), on prévient le JS
+            yield json.dumps({"error": True, "message": str(e)}) + "\n"
 
-    # Wrapping generator correctement
-    def process_video_generator(input_path, output_xml):
-        buffer = []
-
-        def progress_callback(progress, status):
-            buffer.append(f'{{"progress":{progress},"status":"{status}"}}\n')
-
-        process_video(input_path, output_xml, progress_callback)
-
-        for msg in buffer:
-            yield msg
-
-    return Response(generate(), mimetype="text/plain")
+    return Response(generate(), mimetype="application/json")
 
 @app.route("/download/<job_id>")
 def download(job_id):
+    """Permet de récupérer le fichier XML généré."""
     path = os.path.join(OUTPUT_FOLDER, f"{job_id}.xml")
-    return send_file(path, as_attachment=True)
+    
+    if os.path.exists(path):
+        return send_file(
+            path, 
+            as_attachment=True, 
+            download_name="EasierTube_Premiere_Project.xml"
+        )
+    else:
+        return {"error": "Fichier introuvable"}, 404
 
 if __name__ == "__main__":
-    app.run(debug=True, threaded=True)
+    # threaded=True est crucial pour que le streaming JSON fonctionne bien
+    app.run(debug=True, port=5000, threaded=True)
