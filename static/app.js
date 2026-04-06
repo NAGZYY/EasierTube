@@ -52,33 +52,6 @@ function t(key) {
   return translations[currentLang]?.[key] || translations.fr[key];
 }
 
-// ─── FILE HANDLING ───
-dz.addEventListener('dragover', e => {
-  e.preventDefault();
-  dz.classList.add('drag-over');
-});
-
-dz.addEventListener('dragleave', () => dz.classList.remove('drag-over'));
-
-dz.addEventListener('drop', e => {
-  e.preventDefault();
-  dz.classList.remove('drag-over');
-  if (e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]);
-});
-
-fi.addEventListener('change', () => {
-  if (fi.files[0]) handleFile(fi.files[0]);
-});
-
-function handleFile(file) {
-  currentFile = file;
-  dz.querySelector('.dropzone-icon').textContent = '✅';
-  dz.querySelector('.dropzone-title').textContent = file.name;
-  dz.querySelector('.dropzone-sub').textContent =
-    (file.size / 1024 / 1024).toFixed(1) + ' MB · ' + t('readyToProcess');
-  status.textContent = t('fileReady');
-}
-
 // ─── TOGGLES ───
 function selectToggle(btn, type) {
   btn.closest('.toggle-group')
@@ -97,9 +70,36 @@ function getMargin() {
   return document.getElementById('marginRange').value;
 }
 
-// ─── START PROCESS ───
+// ─── FILE HANDLING ───
+let currentFilePath = null; // On stocke le chemin texte, plus le fichier lourd
+
+// On désactive le drag & drop classique car le navigateur ne donne pas le chemin absolu
+dz.addEventListener('click', async () => {
+  try {
+    const res = await fetch('/choose-file');
+    const data = await res.json();
+    
+    if (data.path) {
+      currentFilePath = data.path;
+      // Extrait juste le nom du fichier pour l'affichage
+      const fileName = data.path.split(/[/\\]/).pop(); 
+      
+      dz.querySelector('.dropzone-icon').textContent = '✅';
+      dz.querySelector('.dropzone-title').textContent = fileName;
+      dz.querySelector('.dropzone-sub').textContent = t('readyToProcess');
+      status.textContent = t('fileReady');
+    }
+  } catch (err) {
+    console.error("Erreur lors de la sélection :", err);
+  }
+});
+
+// Supprime ou commente les eventListeners 'dragover', 'dragleave', 'drop' et 'change' de fi
+// car on passe 100% par la fenêtre native de l'OS via le clic.
+
+// ─── START PROCESS (Modifié) ───
 async function handleStart() {
-  if (!currentFile) {
+  if (!currentFilePath) {
     status.textContent = t('noFile');
     return;
   }
@@ -107,17 +107,20 @@ async function handleStart() {
   btn.disabled = true;
   btn.textContent = t('processing');
 
-  const data = new FormData();
-  data.append('file', currentFile);
-  data.append('sensitivity', getSensitivity());
-  data.append('margin_ms', getMargin());
+  // On envoie du JSON léger avec le chemin, au lieu d'un gros FormData
+  const payload = {
+    file_path: currentFilePath,
+    sensitivity: getSensitivity(),
+    margin_ms: getMargin()
+  };
 
   let buffer = '';
 
   try {
     const res = await fetch('/process', {
       method: 'POST',
-      body: data
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
     });
 
     if (!res.ok || !res.body) {
@@ -132,13 +135,11 @@ async function handleStart() {
       if (done) break;
 
       buffer += decoder.decode(value, { stream: true });
-
       const parts = buffer.split('\n');
       buffer = parts.pop();
 
       for (const part of parts) {
         if (!part.trim()) continue;
-
         const msg = JSON.parse(part);
 
         if (msg.progress !== undefined) {
@@ -157,7 +158,6 @@ async function handleStart() {
         }
       }
     }
-
   } catch (err) {
     console.error(err);
     status.textContent = t('error');

@@ -1,55 +1,67 @@
 from flask import Flask, request, Response, send_file
 from flask_cors import CORS
 import os, uuid, json, time
+import platform
+import subprocess
+from werkzeug.utils import secure_filename
+import tkinter as tk
+from tkinter import filedialog
 
 from processor import process_video
 from utils import extract_audio
 
-from werkzeug.utils import secure_filename # Ajoute cet import en haut
-
-import platform
-import subprocess
-
 app = Flask(__name__, static_folder="static")
 CORS(app)
 
-UPLOAD_FOLDER = "uploads"
 OUTPUT_FOLDER = "output"
 AUDIO_UPLOAD = "uploads/audio"
 AUDIO_OUTPUT = "output/audio"
 
-os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(OUTPUT_FOLDER, exist_ok=True)
 os.makedirs(AUDIO_UPLOAD, exist_ok=True)
 os.makedirs(AUDIO_OUTPUT, exist_ok=True)
 
-
 # ─────────────────────────────
-# PAGE PRINCIPALE
+# PAGE PRINCIPALE (Celle qui manquait !)
 # ─────────────────────────────
 @app.route("/")
 def index():
     return app.send_static_file("index.html")
 
+# ─────────────────────────────
+# SÉLECTION DE FICHIER NATIVE
+# ─────────────────────────────
+@app.route("/choose-file", methods=["GET"])
+def choose_file():
+    # Ouvre une fenêtre système pour choisir le fichier
+    root = tk.Tk()
+    root.attributes('-topmost', True) # Garde la fenêtre au premier plan
+    root.withdraw() # Cache la fenêtre principale tk
+    
+    file_path = filedialog.askopenfilename(
+        title="Sélectionner une vidéo",
+        filetypes=[("Vidéos", "*.mp4 *.mov *.avi *.mkv")]
+    )
+    root.destroy()
+    
+    return {"path": file_path}
 
 # ─────────────────────────────
-# XML VIDEO (INCHANGÉ)
+# XML VIDEO
 # ─────────────────────────────
 @app.route("/process", methods=["POST"])
 def process():
-    if "file" not in request.files:
-        return {"error": "Aucun fichier"}, 400
+    data = request.json
+    input_path = data.get("file_path")
+    
+    if not input_path or not os.path.exists(input_path):
+        return {"error": "Fichier introuvable ou invalide"}, 400
 
-    file = request.files["file"]
     job_id = str(uuid.uuid4())
+    sensitivity = data.get("sensitivity", "normal")
+    margin_ms = int(data.get("margin_ms", 120))
 
-    sensitivity = request.form.get("sensitivity", "normal")
-    margin_ms = int(request.form.get("margin_ms", 120))
-
-    input_path = os.path.join(UPLOAD_FOLDER, f"{job_id}.mp4")
     output_xml = os.path.join(OUTPUT_FOLDER, f"{job_id}.xml")
-
-    file.save(input_path)
 
     def stream():
         for progress, status in process_video(
@@ -68,7 +80,6 @@ def process():
 
     return Response(stream(), mimetype="text/plain")
 
-
 # ─────────────────────────────
 # TÉLÉCHARGEMENT XML
 # ─────────────────────────────
@@ -80,23 +91,20 @@ def download(job_id):
 
     return send_file(path, as_attachment=True)
 
-
 # ─────────────────────────────
-# ROUTE POUR OUVRIR LE DOSSIER (Nouveau)
+# ROUTE POUR OUVRIR LE DOSSIER
 # ─────────────────────────────
 @app.route("/open-output-folder", methods=["GET"])
 def open_output_folder():
-    # On force le chemin absolu vers ton dossier de sortie
     folder_path = os.path.abspath(AUDIO_OUTPUT)
     
-    print(f"Tentative d'ouverture du dossier : {folder_path}") # Vérifie ta console Python !
+    print(f"Tentative d'ouverture du dossier : {folder_path}")
 
     if not os.path.exists(folder_path):
         return {"error": "Le dossier n'existe pas encore"}, 404
 
     try:
         if platform.system() == "Windows":
-            # Correction spécifique Windows : on utilise explorer avec le chemin
             os.startfile(folder_path)
         elif platform.system() == "Darwin": # macOS
             subprocess.Popen(["open", folder_path])
@@ -109,7 +117,7 @@ def open_output_folder():
         return {"error": str(e)}, 500
 
 # ─────────────────────────────
-# CONVERTISSEUR AUDIO (SSE-like)
+# CONVERTISSEUR AUDIO
 # ─────────────────────────────
 @app.route("/convert-audio", methods=["POST"])
 def convert_audio():
@@ -117,15 +125,13 @@ def convert_audio():
     if not files:
         return {"error": "Aucun fichier"}, 400
 
-    # ÉTAPE 1 : On sauvegarde tout immédiatement sur le disque
-    # Cela évite l'erreur "read of closed file"
     saved_files = []
     for f in files:
         safe_name = secure_filename(os.path.basename(f.filename))
         if not safe_name:
             continue
         input_path = os.path.join(AUDIO_UPLOAD, safe_name)
-        f.save(input_path) # Sauvegarde réelle sur le disque
+        f.save(input_path)
         saved_files.append(safe_name)
 
     def generate():
@@ -138,7 +144,6 @@ def convert_audio():
             output_path = os.path.abspath(os.path.join(AUDIO_OUTPUT, f"{name_without_ext}.wav"))
 
             try:
-                # ÉTAPE 2 : Conversion
                 extract_audio(input_path, output_path, high_quality=high_quality)
                 status = f"✅ Convert : {safe_name}"
             except Exception as e:
@@ -152,11 +157,13 @@ def convert_audio():
                 "done": (i + 1 == total)
             }) + "\n"
             
-            # Nettoyage de l'input après conversion
             if os.path.exists(input_path):
                 os.remove(input_path)
 
     return Response(generate(), mimetype="text/plain")
 
+# ─────────────────────────────
+# DÉMARRAGE DU SERVEUR (Ce qui manquait !)
+# ─────────────────────────────
 if __name__ == "__main__":
     app.run(debug=True, port=5000)
